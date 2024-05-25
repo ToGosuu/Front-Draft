@@ -1,26 +1,30 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <component :is="componenteActual" @update:component="actualizarComponente" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MainPage from './components/MainPage.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MainPage
+  },
+  data() {
+    return {
+      componenteActual: MainPage // Componente inicial
+    };
+  },
+  methods: {
+    actualizarComponente(componente) {
+      this.componenteActual = componente;
+    }
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+/* Estilos globales si es necesario */
 </style>
