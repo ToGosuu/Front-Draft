@@ -1,8 +1,9 @@
+<!-- src/components/DraftLottery.vue -->
 <template>
     <div class="draft-lottery">
       <h2>Lotería del DRAFT</h2>
       <ul>
-        <li v-for="(team, index) in teams" :key="index">{{ index + 1 }}. {{ team }}</li>
+        <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team }}</li>
       </ul>
       <button @click="goToDraft">Pasar al DRAFT</button>
     </div>
@@ -12,15 +13,20 @@
   export default {
     data() {
       return {
-        teams: [
-          'Equipo 1', 'Equipo 2', 'Equipo 3',
-          // agrega los demás equipos
-        ]
+        draftOrder: []
       };
+    },
+    created() {
+      // Fetch draft order from the backend
+      fetch('/api/draft-order')
+        .then(response => response.json())
+        .then(data => {
+          this.draftOrder = data;
+        });
     },
     methods: {
       goToDraft() {
-        // Lógica para pasar al draft
+        this.$emit('go-to-draft');
       }
     }
   };

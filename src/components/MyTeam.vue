@@ -1,3 +1,4 @@
+<!-- src/components/MyTeam.vue -->
 <template>
     <div class="my-team">
       <h2>Mi Equipo</h2>
@@ -21,7 +22,6 @@
           </tr>
         </tbody>
       </table>
-      <button @click="selectPlayer">Seleccionar</button>
     </div>
   </template>
   
@@ -29,16 +29,16 @@
   export default {
     data() {
       return {
-        team: [
-          { name: 'James Harden', position: 'G', rating: 95, age: 28, contract: '5 años/$40M' },
-          // agrega los demás jugadores
-        ]
+        team: []
       };
     },
-    methods: {
-      selectPlayer() {
-        // Lógica para seleccionar un jugador
-      }
+    created() {
+      // Fetch team data from the backend
+      fetch('/api/my-team')
+        .then(response => response.json())
+        .then(data => {
+          this.team = data;
+        });
     }
   };
   </script>
@@ -58,13 +58,6 @@
     border: 1px solid #fff;
     padding: 10px;
     text-align: left;
-  }
-  button {
-    background-color: red;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
   }
   </style>
   

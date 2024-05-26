@@ -1,3 +1,4 @@
+<!-- src/components/AssociationDraft.vue -->
 <template>
     <div class="association-draft">
       <h2>DRAFT de la asociación</h2>
@@ -12,7 +13,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(player, index) in players" :key="index">
+          <tr v-for="(player, index) in players" :key="index" @click="draftPlayer(player)">
             <td>{{ player.name }}</td>
             <td>{{ player.position }}</td>
             <td>{{ player.rating }}</td>
@@ -21,7 +22,6 @@
           </tr>
         </tbody>
       </table>
-      <button @click="draftPlayer">Draftear</button>
     </div>
   </template>
   
@@ -29,15 +29,31 @@
   export default {
     data() {
       return {
-        players: [
-          { name: 'Jugador 1', position: 'G', rating: 70, age: 21, team: 'Equipo 1' },
-          // agrega los demás jugadores
-        ]
+        players: []
       };
     },
+    created() {
+      // Fetch draft players from the backend
+      fetch('/api/draft-players')
+        .then(response => response.json())
+        .then(data => {
+          this.players = data;
+        });
+    },
     methods: {
-      draftPlayer() {
-        // Lógica para draftear un jugador
+      draftPlayer(player) {
+        // Send selected player to the backend
+        fetch('/api/draft-player', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(player)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle response data
+        });
       }
     }
   };
@@ -59,12 +75,11 @@
     padding: 10px;
     text-align: left;
   }
-  button {
-    background-color: red;
-    color: white;
-    padding: 10px;
-    border: none;
+  tbody tr {
     cursor: pointer;
+  }
+  tbody tr:hover {
+    background-color: #444;
   }
   </style>
   

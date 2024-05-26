@@ -1,5 +1,6 @@
+<!-- src/components/LotteryProbabilities.vue -->
 <template>
-    <div class="lottery-simulator">
+    <div class="lottery-probabilities">
       <h2>Probabilidades de lotería</h2>
       <div v-for="(prob, index) in probabilities" :key="index" class="probability">
         <label>{{ prob.team }}: {{ prob.chance }}%</label>
@@ -12,23 +13,27 @@
   export default {
     data() {
       return {
-        probabilities: [
-          { team: '1. Equipo', chance: 25.0 },
-          { team: '2. Equipo', chance: 19.9 },
-          // agrega los demás equipos
-        ]
+        probabilities: []
       };
+    },
+    created() {
+      // Fetch probabilities from the backend
+      fetch('/api/lottery-probabilities')
+        .then(response => response.json())
+        .then(data => {
+          this.probabilities = data;
+        });
     },
     methods: {
       simulateLottery() {
-        // Lógica para simular la lotería
+        // Logic to simulate the lottery
       }
     }
   };
   </script>
   
   <style scoped>
-  .lottery-simulator {
+  .lottery-probabilities {
     background-color: #333;
     color: #fff;
     padding: 20px;
