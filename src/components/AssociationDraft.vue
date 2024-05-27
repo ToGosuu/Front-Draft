@@ -27,34 +27,14 @@
   
   <script>
   export default {
+    name: 'AssociationDraft',
     data() {
       return {
-        players: []
+        // Define tu data aquí si la necesitas, o elimínala si no la usas
       };
     },
-    created() {
-      // Fetch draft players from the backend
-      fetch('/api/draft-players')
-        .then(response => response.json())
-        .then(data => {
-          this.players = data;
-        });
-    },
     methods: {
-      draftPlayer(player) {
-        // Send selected player to the backend
-        fetch('/api/draft-player', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(player)
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Handle response data
-        });
-      }
+      // Tus métodos aquí
     }
   };
   </script>

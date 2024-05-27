@@ -1,8 +1,8 @@
 <!-- src/components/Trades.vue -->
 <template>
-    <div class="trades">
+    <div class="Player trades">
       <h2>Traspasos</h2>
-      <div class="trade-options">
+      <div class="Player-trade-options">
         <div>
           <label>Selecciona del DRAFT</label>
           <button @click="selectDraftPlayer">+</button>
@@ -18,36 +18,14 @@
   
   <script>
   export default {
+    name: 'PlayerTrades',
     data() {
       return {
-        draftPlayer: null,
-        otherTeamPlayer: null
+        // Define tu data aquí si la necesitas, o elimínala si no la usas
       };
     },
     methods: {
-      selectDraftPlayer() {
-        // Lógica para seleccionar un jugador del draft
-      },
-      selectOtherTeamPlayer() {
-        // Lógica para seleccionar un jugador de otro equipo
-      },
-      makeTrade() {
-        // Enviar la decisión del usuario al backend
-        fetch('/api/make-trade', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            draftPlayer: this.draftPlayer,
-            otherTeamPlayer: this.otherTeamPlayer
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Handle response data
-        });
-      }
+      // Tus métodos aquí
     }
   };
   </script>
