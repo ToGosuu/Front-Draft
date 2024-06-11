@@ -2,13 +2,13 @@
   <div id="app">
     <StartPage v-if="currentPage === 'start'" @start-game="goToChooseUTeam" />
     <ChooseUTeam v-if="currentPage === 'chooseUTeam'" @team-chosen="teamChosen" />
-    <ChooseTeam v-if="currentPage === 'chooseTeam'" />
-    <LotteryProbabilities v-if="currentPage === 'lotteryProbabilities'" />
-    <DraftLottery v-if="currentPage === 'draftLottery'" />
+    <ChooseTeam v-if="currentPage === 'chooseTeam'" @choose-team="goToLotteryProbabilities" />
+    <LotteryProbabilities v-if="currentPage === 'lotteryProbabilities'" @simulate-lottery="goToDraftLottery" />
+    <DraftLottery v-if="currentPage === 'draftLottery'" @go-to-draft="goToAssociationDraft" />
     <MyTeam v-if="currentPage === 'myTeam'" />
     <AssociationDraft v-if="currentPage === 'associationDraft'" />
     <PlayerTrades v-if="currentPage === 'playerTrades'" />
-    <SelectTeam v-if="currentPage === 'selectTeam'" />
+    <SelectTeam v-if="currentPage === 'selectTeam'" @select-team="goToPlayerTeam" />
     <PlayerTeam v-if="currentPage === 'playerTeam'" />
   </div>
 </template>
@@ -27,39 +27,42 @@ import PlayerTeam from './components/PlayerTeam.vue';
 
 export default {
   name: 'App',
-  components: {
-    StartPage,
-    ChooseUTeam,
-    ChooseTeam,
-    LotteryProbabilities,
-    DraftLottery,
-    MyTeam,
-    AssociationDraft,
-    PlayerTrades,
-    SelectTeam,
-    PlayerTeam
-  },
   data() {
     return {
-      currentPage: 'start' // La página inicial es 'start'
+      currentPage: 'start',
     };
   },
   methods: {
     goToChooseUTeam() {
       this.currentPage = 'chooseUTeam';
     },
-    teamChosen(index) {
-      console.log('Equipo elegido:', index);
-      // Aquí se puede navegar a la siguiente página después de elegir el equipo
+    teamChosen() {
+      this.currentPage = 'chooseTeam';
+    },
+    goToLotteryProbabilities() {
       this.currentPage = 'lotteryProbabilities';
-    }
-  }
+    },
+    goToDraftLottery() {
+      this.currentPage = 'draftLottery';
+    },
+    goToAssociationDraft() {
+      this.currentPage = 'associationDraft';
+    },
+    goToPlayerTrades() {
+      this.currentPage = 'playerTrades';
+    },
+    goToPlayerTeam() {
+      this.currentPage = 'playerTeam';
+    },
+  },
 };
 </script>
 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
