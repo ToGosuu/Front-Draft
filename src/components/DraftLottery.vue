@@ -1,56 +1,67 @@
-<!-- src/components/DraftLottery.vue -->
 <template>
-    <div class="draft-lottery">
-      <h2>Lotería del DRAFT</h2>
+  <div class="draft-lottery">
+    <h2>Lotería del DRAFT</h2>
+    <transition-group name="fade">
       <ul>
         <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team }}</li>
       </ul>
-      <button @click="goToDraft">Pasar al DRAFT</button>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        draftOrder: []
-      };
-    },
-    created() {
-      // Fetch draft order from the backend
+    </transition-group>
+    <button @click="goToDraft" :disabled="draftOrder.length === 0">Pasar al DRAFT</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      draftOrder: []
+    };
+  },
+  created() {
+    this.fetchDraftOrder();
+  },
+  methods: {
+    fetchDraftOrder() {
       fetch('/api/draft-order')
         .then(response => response.json())
         .then(data => {
           this.draftOrder = data;
+        })
+        .catch(error => {
+          console.error('Error al obtener el orden del draft:', error);
         });
     },
-    methods: {
-      goToDraft() {
+    goToDraft() {
+      if (this.draftOrder.length > 0) {
         this.$emit('go-to-draft');
       }
     }
-  };
-  </script>
-  
-  <style scoped>
-  .draft-lottery {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
   }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    margin-bottom: 5px;
-  }
-  button {
-    background-color: red;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-  }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+.draft-lottery {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  margin-bottom: 5px;
+}
+button {
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+</style>
