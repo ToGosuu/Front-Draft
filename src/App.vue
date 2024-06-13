@@ -1,4 +1,5 @@
 <template>
+
   <div id="app">
     <component :is="currentPage"
                @teamChosen="goToChooseTeamToSing"

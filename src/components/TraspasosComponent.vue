@@ -59,7 +59,7 @@ export default {
     selectOtherTeamPlayer() {
       // Lógica para seleccionar un jugador del otro equipo
     },
-    removeFromTrade(player) {
+    removeFromTrade() {
       // Lógica para quitar un jugador del tradeo
     },
     makeTrade() {

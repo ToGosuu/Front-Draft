@@ -11,6 +11,7 @@
             <th>Media</th>
             <th>Edad</th>
             <th>Contrato</th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -36,25 +37,26 @@ export default {
   data() {
     return {
       teamRoster: [], // Lista de jugadores del equipo del usuario
-      selectedTeam: null // Equipo seleccionado para fichar un jugador
+      selectedTeam: '123' // Ejemplo: ID del equipo seleccionado, podrías obtenerlo de la autenticación o donde sea necesario
     };
   },
   created() {
-    this.fetchTeamRoster();
+    this.fetchTeamRoster(this.selectedTeam); // Llama al método para obtener la plantilla del equipo
   },
   methods: {
-    fetchTeamRoster() {
-      fetch(`/api/my-team-roster`)
+    fetchTeamRoster(teamId) {
+      // Realiza la solicitud al backend para obtener la plantilla del equipo filtrada por teamId
+      fetch(`/api/teams/${teamId}/players`)
         .then(response => response.json())
         .then(data => {
-          this.teamRoster = data;
+          this.teamRoster = data.players; // Asumiendo que el backend devuelve los jugadores dentro de un objeto 'players'
         })
         .catch(error => {
-          console.error('Error al obtener la plantilla del equipo del usuario:', error);
+          console.error('Error al obtener la plantilla del equipo:', error);
         });
     },
     offerPlayer(player) {
-      // Aquí implementar la lógica para ofrecer al jugador al backend
+      // Implementa la lógica para ofrecer al jugador
       console.log('Ofrecer jugador:', player);
 
       // Ejemplo de acción que podrías realizar:
@@ -67,16 +69,22 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
-        // Manejar la respuesta del backend
-        console.log('Valor del jugador:', data);
+        // Maneja la respuesta del backend según el contexto de tu aplicación
+        console.log('Respuesta del backend:', data);
         
-        // Verificar si hay un equipo seleccionado o no
-        if (this.selectedTeam) {
-          // Redirigir a la ventana PlantillaEquipoParaFichar si hay un equipo seleccionado
-          this.$router.push({ name: 'PlantillaEquipoParaFichar', params: { selectedTeam: this.selectedTeam } });
+        // Ejemplo de navegación basada en la respuesta del backend
+        if (data.success) {
+          // Si la oferta fue exitosa, navegar a una página de confirmación o realizar otra acción
+          // Ejemplo: redirigir a la ventana PlantillaEquipoParaFichar si hay un equipo seleccionado
+          if (this.selectedTeam) {
+            this.$router.push({ name: 'PlantillaEquipoParaFichar', params: { selectedTeam: this.selectedTeam } });
+          } else {
+            // Mostrar opciones para ir a TraspasosComponent si no hay un equipo seleccionado
+            this.$router.push({ name: 'TraspasosComponent' });
+          }
         } else {
-          // Mostrar opciones para ir a TraspasosComponent y ChooseTeamToSing si no hay un equipo seleccionado
-          // O simplemente mantener al usuario en esta ventana para ofrecer más jugadores
+          // Manejar el caso de error o falla en la oferta, mostrar mensaje de error, etc.
+          console.error('Error al procesar la oferta:', data.error);
         }
       })
       .catch(error => {
@@ -88,38 +96,30 @@ export default {
 </script>
 
 <style scoped>
-.my-team-3-1-2 {
+.my-team {
   background-color: #333;
   color: #fff;
   padding: 20px;
 }
-
-.team-roster {
-  margin-top: 20px;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
 }
-
 th, td {
   border: 1px solid #fff;
   padding: 10px;
   text-align: left;
 }
-
 button {
-  background-color: #4CAF50;
+  background-color: red;
   color: white;
-  padding: 8px 16px;
+  padding: 10px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
-
-button:hover {
-  background-color: #45a049;
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
 }
 </style>

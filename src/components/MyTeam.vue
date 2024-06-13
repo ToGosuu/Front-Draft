@@ -29,19 +29,21 @@
 export default {
   data() {
     return {
-      team: []
+      team: [] // Lista de jugadores del equipo seleccionado
     };
   },
   created() {
-    this.fetchTeamData();
+    // Obtener el ID del equipo desde los parámetros de la ruta
+    const teamId = this.$route.params.id;
+    this.fetchTeamData(teamId);
   },
   methods: {
-    fetchTeamData() {
-      // Realiza una solicitud al backend para obtener los datos del equipo
-      fetch('/api/my-team')
+    fetchTeamData(teamId) {
+      // Realiza la solicitud al backend para obtener los datos del equipo específico por su ID
+      fetch(`/api/teams/${teamId}/players`)
         .then(response => response.json())
         .then(data => {
-          this.team = data;
+          this.team = data.players; // Suponiendo que el backend devuelve los jugadores del equipo dentro de un objeto 'players'
         })
         .catch(error => {
           console.error('Error al obtener el equipo:', error);

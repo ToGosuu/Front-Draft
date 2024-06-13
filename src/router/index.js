@@ -8,8 +8,8 @@ import AssociationDraft from '@/components/AssociationDraft.vue';
 import MyTeam from '@/components/MyTeam.vue';
 import TraspasosComponent from '@/components/TraspasosComponent.vue';
 import PlantillaEquipoParaFichar from '@/components/PlantillaEquipoParaFichar.vue';
-import MyTeam312 from '@/components/MyTeam312.vue'; // Nuevo componente
-import ChooseTeamToSign from '@/components/ChooseTeamToSign.vue';
+import MyTeam312 from '@/components/MyTeam312.vue';
+import ChooseTeamToSing from '@/components/ChooseTeamToSing.vue'; // Corregido el nombre del componente
 
 Vue.use(Router);
 
@@ -63,9 +63,9 @@ export default new Router({
       component: MyTeam312
     },
     {
-      path: '/choose-team-to-sign',
-      name: 'ChooseTeamToSign',
-      component: ChooseTeamToSign
+      path: '/choose-team-to-sing',
+      name: 'ChooseTeamToSing',
+      component: ChooseTeamToSing
     }
   ]
 });

@@ -37,7 +37,7 @@
 export default {
   name: 'PlantillaEquipoParaFichar',
   props: {
-    selectedTeam: String
+    selectedTeam: String // El nombre del equipo seleccionado
   },
   data() {
     return {
@@ -50,16 +50,18 @@ export default {
   },
   methods: {
     fetchTeamRoster() {
-      fetch(`/api/team-roster/${this.selectedTeam}`)
+      // Realiza la solicitud al backend para obtener la plantilla del equipo por su ID
+      fetch(`/api/teams/${this.selectedTeam}/players`)
         .then(response => response.json())
         .then(data => {
-          this.teamRoster = data;
+          this.teamRoster = data.players; // Asumiendo que el backend devuelve los jugadores dentro de un objeto 'players'
         })
         .catch(error => {
           console.error('Error al obtener la plantilla del equipo:', error);
         });
     },
     signPlayer(player) {
+      // Realiza la solicitud para obtener el valor del jugador
       fetch(`/api/player-value/${player.id}`)
         .then(response => response.json())
         .then(data => {
@@ -70,9 +72,11 @@ export default {
         });
     },
     goToMyTeam() {
+      // Navega a la ruta del equipo del usuario
       this.$router.push({ name: 'MyTeam312' });
     },
     goToTrades() {
+      // Navega a la ruta de traspasos
       this.$router.push({ name: 'TraspasosComponent' });
     }
   }
@@ -80,34 +84,30 @@ export default {
 </script>
 
 <style scoped>
-.team-roster {
+.my-team {
   background-color: #333;
   color: #fff;
   padding: 20px;
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
 }
-
 th, td {
   border: 1px solid #fff;
   padding: 10px;
   text-align: left;
 }
-
 button {
-  background-color: #4CAF50;
+  background-color: red;
   color: white;
-  padding: 8px 16px;
+  padding: 10px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
-
-button:hover {
-  background-color: #45a049;
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
 }
 </style>

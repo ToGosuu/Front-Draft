@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+
 export default {
   data() {
     return {
@@ -37,37 +39,34 @@ export default {
     this.fetchDraftOrder();
   },
   methods: {
-  fetchProbabilities() {
-    fetch('/api/lottery-probabilities')
-      .then(response => response.json())
-      .then(data => {
-        this.probabilities = data;
-      })
-      .catch(error => {
-        console.error('Error al obtener las probabilidades de lotería:', error);
-      });
-  },
-  fetchDraftOrder() {
-    fetch('/api/draft-order')
-      .then(response => response.json())
-      .then(data => {
-        this.draftOrder = data;
-      })
-      .catch(error => {
-        console.error('Error al obtener el orden del draft:', error);
-      });
-  },
-  simulateLottery() {
-    if (this.draftOrder.length > 0 && !this.simulating) {
-      this.simulating = true;
-      setTimeout(() => {
-        this.simulating = false;
-        this.$router.push({ name: 'DraftLottery' }); // Redirigir a DraftLottery
-      }, 1000);
+    fetchProbabilities() {
+      axios.get('/api/lotterys')
+        .then(response => {
+          this.probabilities = response.data;
+        })
+        .catch(error => {
+          console.error('Error al obtener las probabilidades de lotería:', error);
+        });
+    },
+    fetchDraftOrder() {
+      axios.get('/api/lotterys')
+        .then(response => {
+          this.draftOrder = response.data;
+        })
+        .catch(error => {
+          console.error('Error al obtener el orden del draft:', error);
+        });
+    },
+    simulateLottery() {
+      if (this.draftOrder.length > 0 && !this.simulating) {
+        this.simulating = true;
+        setTimeout(() => {
+          this.simulating = false;
+          this.$router.push({ name: 'DraftLottery' }); // Redirigir a DraftLottery
+        }, 1000);
+      }
     }
   }
-}
-
 };
 </script>
 

@@ -17,6 +17,7 @@
 
 <script>
 import ModalInput from './modalinput.vue';
+import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
 
 export default {
   name: 'StartPage',
@@ -54,20 +55,19 @@ export default {
     },
     async startGame(name) {
       try {
-        const response = await fetch('/api/start-game', {
-          method: 'POST',
+        // Realiza una solicitud POST al endpoint /users en el servidor Express
+        const response = await axios.post('/api/gameUsers', { name }, {
           headers: {
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ gameName: name })
+          }
         });
-        const data = await response.json();
-        if (response.ok) {
-          this.$emit('start-game', data);
+        if (response.status === 200) {
+          // Aquí maneja la respuesta según sea necesario
+          console.log('Respuesta de inicio de juego:', response.data);
           // Redirigir a la página de selección de equipo
           this.$router.push({ name: 'SeleccionarEquipo' });
         } else {
-          this.errorMessage = `Error al iniciar el juego: ${data.message}`;
+          this.errorMessage = `Error al iniciar el juego: ${response.data.message}`;
         }
       } catch (error) {
         this.errorMessage = `Error al iniciar el juego: ${error.message}`;
@@ -75,18 +75,15 @@ export default {
     },
     async continueGame(name) {
       try {
-        const response = await fetch(`/api/continue-game?name=${encodeURIComponent(name)}`);
-        const data = await response.json();
-        if (response.ok) {
-          if (data.exists) {
-            this.$emit('continue-game', data);
-            // Redirigir a la página de continuación del juego
-            // this.$router.push({ name: 'ContinuarJuego', params: { gameName: name } });
-          } else {
-            this.errorMessage = `El juego "${name}" no existe.`;
-          }
+        // Realiza una solicitud GET al endpoint /users/:id en el servidor Express
+        const response = await axios.get(`/api/gameUsers/${encodeURIComponent(name)}`);
+        if (response.status === 200) {
+          // Aquí maneja la respuesta según sea necesario
+          console.log('Respuesta de continuación de juego:', response.data);
+          // Redirigir a la página de continuación del juego
+          this.$router.push({ name: 'ContinuarJuego', params: { gameName: name } });
         } else {
-          this.errorMessage = `Error al verificar el juego: ${data.message}`;
+          this.errorMessage = `Error al verificar el juego: ${response.data.message}`;
         }
       } catch (error) {
         this.errorMessage = `Error al verificar el juego: ${error.message}`;

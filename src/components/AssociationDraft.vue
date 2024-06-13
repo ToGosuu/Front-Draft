@@ -30,8 +30,9 @@
   </div>
 </template>
 
-
 <script>
+import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+
 export default {
   name: 'AssociationDraft',
   props: {
@@ -51,18 +52,10 @@ export default {
     },
     async draftPlayer(player) {
       try {
-        // Aquí se debería enviar la decisión del usuario al backend para draftear al jugador
-        // Suponiendo que el backend espera recibir el ID del jugador seleccionado
-        const response = await fetch('/api/draft-player', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ playerId: player.id })
-        });
-        if (response.ok) {
+        const response = await axios.post('/api/drafts', { playerId: player.id });
+        if (response.status === 200) {
           // Si la solicitud es exitosa, redirigir a la ventana MyTeam
-          this.$router.push('/my-team');
+          this.$router.push({ name: 'MyTeam' });
         } else {
           console.error('Error al draftear al jugador');
         }
@@ -79,7 +72,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .association-draft {
