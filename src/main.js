@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router'; // Importa el router configurado
+import router from './router/index'; // Importa el router configurado
 
 Vue.config.productionTip = false;
 
