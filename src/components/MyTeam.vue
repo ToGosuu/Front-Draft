@@ -9,7 +9,6 @@
           <th>Media</th>
           <th>Edad</th>
           <th>Contrato</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -19,13 +18,10 @@
           <td>{{ player.rating }}</td>
           <td>{{ player.age }}</td>
           <td>{{ player.contract }}</td>
-          <td>
-            <button @click="editPlayer(player)">Editar</button>
-            <button @click="removePlayer(player)">Eliminar</button>
-          </td>
         </tr>
       </tbody>
     </table>
+    <button @click="goToTraspasos">Ir a Traspasos</button>
   </div>
 </template>
 
@@ -51,35 +47,39 @@ export default {
           console.error('Error al obtener el equipo:', error);
         });
     },
-    editPlayer(player) {
-      // Implementa la lógica para editar al jugador
-      console.log('Editar jugador:', player);
-    },
-    removePlayer(player) {
-      // Implementa la lógica para eliminar al jugador
-      console.log('Eliminar jugador:', player);
-      // Aquí podrías realizar una solicitud al backend para eliminar el jugador de la base de datos
+    goToTraspasos() {
+      // Navegar a la ruta TraspasosComponent
+      this.$router.push({ name: 'TraspasosComponent' });
     }
   }
 };
 </script>
 
-  
-  <style scoped>
-  .my-team {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-  }
-  th, td {
-    border: 1px solid #fff;
-    padding: 10px;
-    text-align: left;
-  }
-  </style>
-  
+<style scoped>
+.my-team {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+th, td {
+  border: 1px solid #fff;
+  padding: 10px;
+  text-align: left;
+}
+button {
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+</style>

@@ -9,6 +9,7 @@
           <th>Media</th>
           <th>Edad</th>
           <th>Equipo</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
@@ -18,6 +19,7 @@
           <td>{{ player.rating }}</td>
           <td>{{ player.age }}</td>
           <td>{{ player.team }}</td>
+          <td><button @click="draftPlayer(player)">Draftear</button></td>
         </tr>
       </tbody>
     </table>
@@ -27,6 +29,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -46,8 +49,29 @@ export default {
     selectPlayer(player) {
       this.selectedPlayer = player;
     },
+    async draftPlayer(player) {
+      try {
+        // Aquí se debería enviar la decisión del usuario al backend para draftear al jugador
+        // Suponiendo que el backend espera recibir el ID del jugador seleccionado
+        const response = await fetch('/api/draft-player', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ playerId: player.id })
+        });
+        if (response.ok) {
+          // Si la solicitud es exitosa, redirigir a la ventana MyTeam
+          this.$router.push('/my-team');
+        } else {
+          console.error('Error al draftear al jugador');
+        }
+      } catch (error) {
+        console.error('Error al draftear al jugador:', error);
+      }
+    },
     confirmSelection() {
-      // Aquí puedes implementar la lógica para confirmar la selección y enviarla al backend
+      // Aquí se podría implementar lógica adicional para confirmar la selección localmente si es necesario
       console.log('Selección confirmada:', this.selectedPlayer);
       // Resetear la selección después de la confirmación
       this.selectedPlayer = null;
@@ -55,6 +79,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .association-draft {

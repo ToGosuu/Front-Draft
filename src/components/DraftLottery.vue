@@ -6,7 +6,9 @@
         <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team }}</li>
       </ul>
     </transition-group>
-    <button @click="goToDraft" :disabled="draftOrder.length === 0">Pasar al DRAFT</button>
+    <button @click="goToAssociationDraft" :disabled="draftOrder.length === 0">Ir a Association Draft</button>
+    <button @click="goToMyTeam" :disabled="draftOrder.length === 0">Ir a Mi Equipo</button>
+    <button @click="goToTraspasosComponent" :disabled="draftOrder.length === 0">Ir a Traspasos</button>
   </div>
 </template>
 
@@ -31,9 +33,19 @@ export default {
           console.error('Error al obtener el orden del draft:', error);
         });
     },
-    goToDraft() {
+    goToAssociationDraft() {
       if (this.draftOrder.length > 0) {
-        this.$emit('go-to-draft');
+        this.$router.push({ name: 'AssociationDraft' });
+      }
+    },
+    goToMyTeam() {
+      if (this.draftOrder.length > 0) {
+        this.$router.push({ name: 'MyTeam' });
+      }
+    },
+    goToTraspasosComponent() {
+      if (this.draftOrder.length > 0) {
+        this.$router.push({ name: 'TraspasosComponent' });
       }
     }
   }
@@ -59,6 +71,7 @@ button {
   padding: 10px;
   border: none;
   cursor: pointer;
+  margin-right: 10px;
 }
 button:disabled {
   background-color: gray;

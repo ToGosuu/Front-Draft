@@ -2,9 +2,10 @@
   <div class="modal">
     <div class="modal-content">
       <h2>{{ title }}</h2>
-      <input type="text" v-model="inputValue" placeholder="Nombre de la partida">
-      <button @click="confirm">Confirmar</button>
-      <button @click="close">Cerrar</button>
+      <input type="text" v-model="inputValue" placeholder="Nombre de la partida" @keyup.enter="confirm">
+      <button @click="confirm" :disabled="isSubmitting">{{ isSubmitting ? 'Enviando...' : 'Confirmar' }}</button>
+      <button @click="close" :disabled="isSubmitting">Cerrar</button>
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
   </div>
 </template>
@@ -20,12 +21,26 @@ export default {
   },
   data() {
     return {
-      inputValue: ''
+      inputValue: '',
+      isSubmitting: false,
+      errorMessage: ''
     };
   },
   methods: {
-    confirm() {
-      this.$emit('confirm', this.inputValue);
+    async confirm() {
+      if (!this.inputValue) {
+        this.errorMessage = 'El nombre de la partida no puede estar vacío';
+        return;
+      }
+      this.isSubmitting = true;
+      this.errorMessage = '';
+      try {
+        await this.$emit('confirm', this.inputValue);
+      } catch (error) {
+        this.errorMessage = 'Error al enviar el nombre de la partida';
+      } finally {
+        this.isSubmitting = false;
+      }
     },
     close() {
       this.$emit('close');
@@ -73,5 +88,15 @@ button {
 
 button + button {
   background-color: #f44336;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>

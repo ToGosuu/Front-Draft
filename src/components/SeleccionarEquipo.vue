@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'EligeTuEquipo',
+  name: 'SeleccionarEquipo',
   data() {
     return {
       teams: [
@@ -40,6 +40,7 @@ export default {
     seleccionarEquipo(equipo) {
       this.equipoSeleccionado = equipo;
       console.log(`Equipo seleccionado: ${equipo}`);
+      this.$router.push({ name: 'LotteryProbabilities' });
       // Aquí puedes agregar la lógica para manejar la selección del equipo
     },
     hoverEquipo(equipo) {
@@ -48,6 +49,7 @@ export default {
     getTeamImage(team) {
       return require(`@/assets/${team}.jpg`);
     }
+    
   }
 };
 </script>
