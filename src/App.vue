@@ -1,6 +1,7 @@
 <template>
 
   <div id="app">
+    <start-page></start-page>
     <component :is="currentPage"
                @teamChosen="goToChooseTeamToSing"
                @goToLotteryProbabilities="goToLotteryProbabilities"
@@ -26,7 +27,8 @@ import MyTeam312 from './components/MyTeam312.vue';
 import PlantillaEquipoParaFichar from './components/PlantillaEquipoParaFichar.vue';
 import SeleccionarEquipo from './components/SeleccionarEquipo.vue';
 import TraspasosComponent from './components/TraspasosComponent.vue';
-import ModalInput from './components/modalinput.vue';
+import ModalInput from './components/ModalInput.vue';
+
 
 export default {
   name: 'App',

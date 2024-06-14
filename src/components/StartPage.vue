@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import ModalInput from './modalinput.vue';
+import ModalInput from './ModalInput.vue';
 import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
 
 export default {
