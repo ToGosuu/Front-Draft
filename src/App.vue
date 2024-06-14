@@ -28,7 +28,10 @@ import PlantillaEquipoParaFichar from './components/PlantillaEquipoParaFichar.vu
 import SeleccionarEquipo from './components/SeleccionarEquipo.vue';
 import TraspasosComponent from './components/TraspasosComponent.vue';
 import ModalInput from './components/ModalInput.vue';
+<<<<<<< HEAD
 
+=======
+>>>>>>> d26f8cd39e9486c0924a979be523f77e1527240e
 
 export default {
   name: 'App',
