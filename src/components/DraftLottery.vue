@@ -3,7 +3,7 @@
     <h2>Lotería del DRAFT</h2>
     <transition-group name="fade">
       <ul>
-        <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team }}</li>
+        <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team.name }} - Posición: {{ team.position }}</li>
       </ul>
     </transition-group>
     <button @click="goToAssociationDraft" :disabled="draftOrder.length === 0">Ir a Association Draft</button>
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+
 export default {
   data() {
     return {
@@ -24,10 +26,9 @@ export default {
   },
   methods: {
     fetchDraftOrder() {
-      fetch('/api/draft-order')
-        .then(response => response.json())
-        .then(data => {
-          this.draftOrder = data;
+      axios.get('http://localhost:3001/api/1.0/simulateLottery')
+        .then(response => {
+          this.draftOrder = response.data.draftOrder;
         })
         .catch(error => {
           console.error('Error al obtener el orden del draft:', error);

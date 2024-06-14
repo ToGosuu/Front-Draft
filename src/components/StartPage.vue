@@ -1,6 +1,6 @@
 <template>
   <div class="start-page">
-    <img src="@/assets/draft17.jpg" alt="Draft Image" class="background-image">
+    <img src="@/assets/Draft.jpg" alt="Draft Image" class="background-image">
     <div class="buttons">
       <button @click="showModal('start')" class="btn btn-primary">Iniciar</button>
       <button class="btn btn-secondary" @click="showModal('continue')">Continuar</button>
@@ -17,7 +17,7 @@
 
 <script>
 import ModalInput from './ModalInput.vue';
-import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+import axios from 'axios';
 
 export default {
   name: 'StartPage',
@@ -28,7 +28,7 @@ export default {
     return {
       isModalVisible: false,
       errorMessage: '',
-      modalType: '' // 'start' o 'continue'
+      modalType: ''
     };
   },
   computed: {
@@ -48,45 +48,31 @@ export default {
       this.isModalVisible = false;
       this.errorMessage = '';
       if (this.modalType === 'start') {
-        await this.startGame(name);
-      } else if (this.modalType === 'continue') {
-        await this.continueGame(name);
+        await this.startGame(name); // Llama a startGame con el nombre ingresado
       }
     },
     async startGame(name) {
       try {
-        // Realiza una solicitud POST al endpoint /users en el servidor Express
-        const response = await axios.post('/api/gameUsers', { name }, {
+        const response = await axios.post('http://localhost:3001/api/1.0/user', { name }, {
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        if (response.status === 200) {
-          // Aquí maneja la respuesta según sea necesario
+
+        if (response.status === 201) {
           console.log('Respuesta de inicio de juego:', response.data);
-          // Redirigir a la página de selección de equipo
+          // Guardar el id del usuario en localStorage para usarlo más adelante
+          localStorage.setItem('userId', response.data.id);
+
+          // Redirige a la página de selección de equipo después de confirmar el nombre
           this.$router.push({ name: 'SeleccionarEquipo' });
         } else {
+          console.error('Error al iniciar el juego:', response.data.message);
           this.errorMessage = `Error al iniciar el juego: ${response.data.message}`;
         }
       } catch (error) {
+        console.error('Error en la solicitud:', error.message);
         this.errorMessage = `Error al iniciar el juego: ${error.message}`;
-      }
-    },
-    async continueGame(name) {
-      try {
-        // Realiza una solicitud GET al endpoint /users/:id en el servidor Express
-        const response = await axios.get(`/api/gameUsers/${encodeURIComponent(name)}`);
-        if (response.status === 200) {
-          // Aquí maneja la respuesta según sea necesario
-          console.log('Respuesta de continuación de juego:', response.data);
-          // Redirigir a la página de continuación del juego
-          this.$router.push({ name: 'ContinuarJuego', params: { gameName: name } });
-        } else {
-          this.errorMessage = `Error al verificar el juego: ${response.data.message}`;
-        }
-      } catch (error) {
-        this.errorMessage = `Error al verificar el juego: ${error.message}`;
       }
     }
   }

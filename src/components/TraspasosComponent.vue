@@ -49,22 +49,36 @@ export default {
   data() {
     return {
       tradeSuccessMessage: '',
-      tradeErrorMessage: ''
+      tradeErrorMessage: '',
+      selectedDraftPlayer: null, // Jugador seleccionado del DRAFT
+      selectedOtherTeamPlayer: null // Jugador seleccionado del otro equipo
     };
   },
   methods: {
     selectDraftPlayer() {
-      // Lógica para seleccionar un jugador del DRAFT
+      // Ejemplo: Seleccionar un jugador del DRAFT (simulado)
+      this.selectedDraftPlayer = { id: 1, name: 'Jugador del DRAFT' };
+      console.log('Jugador del DRAFT seleccionado:', this.selectedDraftPlayer);
     },
     selectOtherTeamPlayer() {
-      // Lógica para seleccionar un jugador del otro equipo
+      // Ejemplo: Seleccionar un jugador del otro equipo (simulado)
+      this.selectedOtherTeamPlayer = { id: 2, name: 'Jugador del otro equipo' };
+      console.log('Jugador del otro equipo seleccionado:', this.selectedOtherTeamPlayer);
     },
-    removeFromTrade() {
+    removeFromTrade(player) {
       // Lógica para quitar un jugador del tradeo
+      console.log('Quitar jugador del tradeo:', player);
+      // Implementa según tu lógica específica, como eliminarlo del array o cambiar el estado.
     },
     makeTrade() {
       // Lógica para realizar el tradeo
+      if (!this.selectedDraftPlayer && !this.selectedOtherTeamPlayer) {
+        this.tradeErrorMessage = 'Selecciona al menos un jugador para realizar el tradeo.';
+        return;
+      }
+
       // Aquí debes enviar la decisión del usuario al backend
+      // Puedes enviar los jugadores seleccionados (this.selectedDraftPlayer y this.selectedOtherTeamPlayer)
       // y manejar la respuesta del backend
       this.sendTradeDecisionToBackend();
     },
@@ -75,12 +89,10 @@ export default {
         const tradeSuccess = true; // Supongamos que el intercambio fue exitoso
         if (tradeSuccess) {
           this.tradeSuccessMessage = '¡Intercambio exitoso!';
-          // Redireccionar a la vista MyTeam312
-          this.$router.push({ name: 'MyTeam312' });
+          // Puedes redirigir o realizar otra acción después del intercambio exitoso
         } else {
           this.tradeErrorMessage = '¡El intercambio falló! Por favor, inténtalo de nuevo.';
-          // Redireccionar a la vista ChooseTeamToSing
-          this.$router.push({ name: 'ChooseTeamToSing' });
+          // Manejar el caso de fallo en el intercambio
         }
       }, 1000); // Simulación de una pequeña demora
     }

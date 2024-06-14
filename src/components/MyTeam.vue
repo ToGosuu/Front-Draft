@@ -40,7 +40,7 @@ export default {
   methods: {
     fetchTeamData(teamId) {
       // Realiza la solicitud al backend para obtener los datos del equipo específico por su ID
-      fetch(`/api/teams/${teamId}/players`)
+      fetch(`http://localhost:3001/api/1.0/playersTeam/${teamId}`)
         .then(response => response.json())
         .then(data => {
           this.team = data.players; // Suponiendo que el backend devuelve los jugadores del equipo dentro de un objeto 'players'

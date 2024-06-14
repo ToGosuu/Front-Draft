@@ -37,16 +37,16 @@ export default {
   data() {
     return {
       teamRoster: [], // Lista de jugadores del equipo del usuario
-      selectedTeam: '123' // Ejemplo: ID del equipo seleccionado, podrías obtenerlo de la autenticación o donde sea necesario
+      selectedTeamId: '123' // Ejemplo: ID del equipo seleccionado, podrías obtenerlo de la autenticación o de otro lugar
     };
   },
   created() {
-    this.fetchTeamRoster(this.selectedTeam); // Llama al método para obtener la plantilla del equipo
+    this.fetchTeamRoster(this.selectedTeamId); // Llama al método para obtener la plantilla del equipo
   },
   methods: {
     fetchTeamRoster(teamId) {
       // Realiza la solicitud al backend para obtener la plantilla del equipo filtrada por teamId
-      fetch(`/api/teams/${teamId}/players`)
+      fetch(`/api/1.0/playersTeam/${teamId}`)
         .then(response => response.json())
         .then(data => {
           this.teamRoster = data.players; // Asumiendo que el backend devuelve los jugadores dentro de un objeto 'players'
@@ -60,7 +60,7 @@ export default {
       console.log('Ofrecer jugador:', player);
 
       // Ejemplo de acción que podrías realizar:
-      fetch(`/api/offer-player`, {
+      fetch(`/api/1.0/offer-player`, {
         method: 'POST',
         body: JSON.stringify(player),
         headers: {
@@ -74,10 +74,9 @@ export default {
         
         // Ejemplo de navegación basada en la respuesta del backend
         if (data.success) {
-          // Si la oferta fue exitosa, navegar a una página de confirmación o realizar otra acción
-          // Ejemplo: redirigir a la ventana PlantillaEquipoParaFichar si hay un equipo seleccionado
-          if (this.selectedTeam) {
-            this.$router.push({ name: 'PlantillaEquipoParaFichar', params: { selectedTeam: this.selectedTeam } });
+          // Si la oferta fue exitosa, navegar a la ventana PlantillaEquipoParaFichar si hay un equipo seleccionado
+          if (this.selectedTeamId) {
+            this.$router.push({ name: 'PlantillaEquipoParaFichar', params: { selectedTeam: this.selectedTeamId } });
           } else {
             // Mostrar opciones para ir a TraspasosComponent si no hay un equipo seleccionado
             this.$router.push({ name: 'TraspasosComponent' });
@@ -96,10 +95,13 @@ export default {
 </script>
 
 <style scoped>
-.my-team {
+.my-team-3-1-2 {
   background-color: #333;
   color: #fff;
   padding: 20px;
+}
+.team-roster {
+  margin-top: 20px;
 }
 table {
   width: 100%;

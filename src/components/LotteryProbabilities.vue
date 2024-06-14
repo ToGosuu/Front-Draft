@@ -40,18 +40,18 @@ export default {
   },
   methods: {
     fetchProbabilities() {
-      axios.get('/api/lotterys')
+      axios.get('http://localhost:3001/api/1.0/probabilityLottery')
         .then(response => {
-          this.probabilities = response.data;
+          this.probabilities = response.data.probabilities;
         })
         .catch(error => {
           console.error('Error al obtener las probabilidades de lotería:', error);
         });
     },
     fetchDraftOrder() {
-      axios.get('/api/lotterys')
+      axios.get('http://localhost:3001/api/1.0/probabilityLottery')
         .then(response => {
-          this.draftOrder = response.data;
+          this.draftOrder = response.data.draftOrder;
         })
         .catch(error => {
           console.error('Error al obtener el orden del draft:', error);

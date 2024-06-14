@@ -51,10 +51,10 @@ export default {
   methods: {
     fetchTeamRoster() {
       // Realiza la solicitud al backend para obtener la plantilla del equipo por su ID
-      fetch(`/api/teams/${this.selectedTeam}/players`)
+      fetch(`/api/1.0/playersTeam/${this.selectedTeam}`)
         .then(response => response.json())
         .then(data => {
-          this.teamRoster = data.players; // Asumiendo que el backend devuelve los jugadores dentro de un objeto 'players'
+          this.teamRoster = data.players; // Suponiendo que el backend devuelve los jugadores dentro de un objeto 'players'
         })
         .catch(error => {
           console.error('Error al obtener la plantilla del equipo:', error);
@@ -62,7 +62,7 @@ export default {
     },
     signPlayer(player) {
       // Realiza la solicitud para obtener el valor del jugador
-      fetch(`/api/player-value/${player.id}`)
+      fetch(`/api/1.0/players/${player.id}`)
         .then(response => response.json())
         .then(data => {
           this.selectedPlayer = { ...player, value: data.value };
@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style scoped>
-.my-team {
+.team-roster {
   background-color: #333;
   color: #fff;
   padding: 20px;

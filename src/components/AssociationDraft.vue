@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(player, index) in players" :key="index" @click="selectPlayer(player)">
+        <tr v-for="player in players" :key="player.id" @click="selectPlayer(player)">
           <td>{{ player.name }}</td>
           <td>{{ player.position }}</td>
           <td>{{ player.rating }}</td>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+import axios from 'axios'; // Importar Axios para realizar solicitudes HTTP
 
 export default {
   name: 'AssociationDraft',
@@ -48,11 +48,15 @@ export default {
   },
   methods: {
     selectPlayer(player) {
+      // Establecer el jugador seleccionado
       this.selectedPlayer = player;
     },
     async draftPlayer(player) {
       try {
-        const response = await axios.post('/api/drafts', { playerId: player.id });
+        // Hacer la solicitud PUT para draftear al jugador con su ID
+        const response = await axios.put(`http://localhost:3001/api/1.0/changeTeam/${player.id}`, {
+          idTeam: 'ID_DEL_EQUIPO' // Reemplazar 'ID_DEL_EQUIPO' con el ID real del equipo
+        });
         if (response.status === 200) {
           // Si la solicitud es exitosa, redirigir a la ventana MyTeam
           this.$router.push({ name: 'MyTeam' });

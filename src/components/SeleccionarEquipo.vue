@@ -4,19 +4,20 @@
     <ul>
       <li
         v-for="equipo in teams"
-        :key="equipo"
-        @click="seleccionarEquipo(equipo)"
+        :key="equipo.id"
+        @click="seleccionarEquipo(equipo.id)"
         @mouseover="hoverEquipo(equipo)"
         @mouseleave="hoverEquipo(null)"
       >
-        <img :src="getTeamImage(equipo)" :alt="equipo" />
-        <span>{{ equipo }}</span>
+        <img :src="getTeamImage(equipo.name)" :alt="equipo.name" />
+        <span>{{ equipo.name }}</span>
       </li>
     </ul>
 
-    <h3 v-if="equipoSeleccionado">Equipo seleccionado: {{ equipoSeleccionado }}</h3>
-    <h3 v-if="equipoHover">Equipo en hover: {{ equipoHover }}</h3>
+    <h3 v-if="equipoSeleccionado">Equipo seleccionado: {{ equipoSeleccionado.name }}</h3>
+    <h3 v-if="equipoHover">Equipo en hover: {{ equipoHover.name }}</h3>
     <p>{{ mensaje }}</p>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>
 
@@ -27,35 +28,76 @@ export default {
   name: 'SeleccionarEquipo',
   data() {
     return {
-      teams: [
-        "76ers", "Blazers", "Bucks", "Bulls", "Cavaliers", "Celtics", "Clippers", "Golden", "Grizzlies", "Hawks", "Heat", "Hornets", "Jazz", "Knicks", "Lakers", "Magic", "Mavericks", "Nets", "Nuggets", "Pacers", "Pelicans", "Pistons", "Raptors", "Rockets", "SacraKings", "Spurs", "Suns", "Thunder", "Timberwolves", "Wizards"
-      ],
+      teams: [],
       equipoSeleccionado: null,
       equipoHover: null,
-      mensaje: ''
+      mensaje: '',
+      errorMessage: ''
     };
   },
   mounted() {
-    axios.get('http://localhost:3001/app/routes/teams.mjs')
-      .then(response => {
-        this.mensaje = response.data.mensaje;
-      })
-      .catch(error => {
-        console.error('Error al obtener datos desde Express:', error);
-      });
+    this.fetchTeams();
   },
   methods: {
-    seleccionarEquipo(equipo) {
-      this.equipoSeleccionado = equipo;
-      console.log(`Equipo seleccionado: ${equipo}`);
-      this.$router.push({ name: 'LotteryProbabilities' }); // Comentado para pruebas locales
+    async fetchTeams() {
+      try {
+        const response = await axios.get('http://localhost:3001/api/1.0/nameTeam');
+        this.teams = response.data.teams;
+        this.mensaje = response.data.message;
+      } catch (error) {
+        console.error('Error al obtener datos desde Express:', error);
+        this.errorMessage = 'Error al obtener datos desde el servidor';
+      }
     },
+    async seleccionarEquipo(equipoId) {
+  const userId = localStorage.getItem('userId');
+  const equipoSeleccionado = this.teams.find(equipo => equipo.id === equipoId);
+  
+  if (!userId) {
+    this.errorMessage = 'Error: No se encontró userId en localStorage';
+    return;
+  }
+
+  if (!equipoSeleccionado) {
+    this.errorMessage = 'Error: No se encontró el equipo seleccionado';
+    return;
+  }
+
+  try {
+    const response = await axios.post('http://localhost:3001/api/1.0/gameUser', {
+      idUser: userId,
+      name: equipoSeleccionado.name,
+      team: equipoSeleccionado.name
+      
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.status === 201) {
+      console.log('Respuesta de inicio de juego:', response.data);
+      this.$router.push({ name: 'LotteryProbabilities' });
+    } else {
+      console.error('Error al iniciar el juego:', response.data.message);
+      this.errorMessage = `Error al iniciar el juego: ${response.data.message}`;
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error.message);
+    this.errorMessage = `Error al iniciar el juego: ${error.message}`;
+  }
+}
+
+,
     hoverEquipo(equipo) {
       this.equipoHover = equipo;
     },
-    getTeamImage(team) {
-      // Simplemente retorna una imagen por defecto para cada equipo por ahora
-      return require(`@/assets/${team}.jpg`); // Ajusta la ruta según tu estructura de archivos
+    getTeamImage(teamName) {
+      try {
+        return require(`@/assets/${teamName}.jpg`);
+      } catch (error) {
+        return require('@/assets/Draft.jpg');
+      }
     }
   }
 };
@@ -78,5 +120,10 @@ img {
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 20px;
 }
 </style>
