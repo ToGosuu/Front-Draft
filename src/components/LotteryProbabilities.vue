@@ -4,8 +4,13 @@
     <div class="lottery-probabilities">
       <h3>Probabilidades de lotería</h3>
       <transition-group name="fade">
-        <div v-for="(prob, index) in probabilities" :key="index" class="probability">
-          <label>{{ prob.team }}: {{ prob.chance }}%</label>
+        <div v-if="probabilities.length > 0">
+          <div v-for="(prob, index) in probabilities" :key="index" class="probability">
+            <label>{{ prob.team }}: {{ prob.chance }}%</label>
+          </div>
+        </div>
+        <div v-else>
+          <p>Cargando probabilidades...</p>
         </div>
       </transition-group>
     </div>
@@ -17,14 +22,14 @@
         </ul>
       </transition-group>
     </div>
-    <button @click="simulateLottery" :disabled="draftOrder.length === 0 || simulating">
-      {{ simulating ? 'Simulando...' : 'Simular lotería' }}
+    <button @click="goToDraftLottery">
+      Ir a DraftLottery
     </button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+import axios from 'axios';
 
 export default {
   data() {
@@ -35,36 +40,21 @@ export default {
     };
   },
   created() {
-    this.fetchProbabilities();
-    this.fetchDraftOrder();
+    this.fetchProbabilities(); // Llama a la función para obtener las probabilidades al crear el componente
   },
   methods: {
     fetchProbabilities() {
       axios.get('http://localhost:3001/api/1.0/probabilityLottery')
         .then(response => {
-          this.probabilities = response.data.probabilities;
+          this.probabilities = response.data.probabilities; // Asigna los datos obtenidos a probabilities
         })
         .catch(error => {
           console.error('Error al obtener las probabilidades de lotería:', error);
         });
     },
-    fetchDraftOrder() {
-      axios.get('http://localhost:3001/api/1.0/probabilityLottery')
-        .then(response => {
-          this.draftOrder = response.data.draftOrder;
-        })
-        .catch(error => {
-          console.error('Error al obtener el orden del draft:', error);
-        });
-    },
-    simulateLottery() {
-      if (this.draftOrder.length > 0 && !this.simulating) {
-        this.simulating = true;
-        setTimeout(() => {
-          this.simulating = false;
-          this.$router.push({ name: 'DraftLottery' }); // Redirigir a DraftLottery
-        }, 1000);
-      }
+    goToDraftLottery() {
+      // Navegar a la ruta DraftLottery
+      this.$router.push({ name: 'DraftLottery' });
     }
   }
 };

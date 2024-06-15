@@ -65,7 +65,7 @@ export default {
 
   try {
     const response = await axios.post('http://localhost:3001/api/1.0/gameUser', {
-      idUser: userId,
+      idUser: "666cc9813a21fcaf7a3b5466",
       name: equipoSeleccionado.name,
       team: equipoSeleccionado.name
       

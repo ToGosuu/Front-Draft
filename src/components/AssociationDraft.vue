@@ -1,6 +1,8 @@
 <template>
   <div class="association-draft">
     <h2>DRAFT de la asociación</h2>
+    <label for="position-input">Seleccionar jugador por posición:</label>
+    <input type="number" id="position-input" v-model="selectedPosition" placeholder="Número de posición">
     <table>
       <thead>
         <tr>
@@ -13,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="player in players" :key="player.id" @click="selectPlayer(player)">
+        <tr v-for="player in playersDraft" :key="player.id" @click="selectPlayer(player)">
           <td>{{ player.name }}</td>
           <td>{{ player.position }}</td>
           <td>{{ player.rating }}</td>
@@ -35,16 +37,16 @@ import axios from 'axios'; // Importar Axios para realizar solicitudes HTTP
 
 export default {
   name: 'AssociationDraft',
-  props: {
-    players: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
     return {
-      selectedPlayer: null
+      selectedPlayer: null,
+      selectedPosition: '',  // Dato para almacenar la posición seleccionada
+      playersDraft: []  // Inicializar como un arreglo vacío para los jugadores de playersDraft
     };
+  },
+  created() {
+    // Cargar los jugadores desde playersDraft al inicializar el componente
+    this.loadPlayersDraft();
   },
   methods: {
     selectPlayer(player) {
@@ -55,11 +57,13 @@ export default {
       try {
         // Hacer la solicitud PUT para draftear al jugador con su ID
         const response = await axios.put(`http://localhost:3001/api/1.0/changeTeam/${player.id}`, {
-          idTeam: 'ID_DEL_EQUIPO' // Reemplazar 'ID_DEL_EQUIPO' con el ID real del equipo
+          idTeam: '665cff7fda591cb24e7fd18c' // ID del equipo al que se va a draftear el jugador
         });
         if (response.status === 200) {
           // Si la solicitud es exitosa, redirigir a la ventana MyTeam
           this.$router.push({ name: 'MyTeam' });
+          // Volver a cargar los jugadores desde playersDraft después de draftear
+          this.loadPlayersDraft();
         } else {
           console.error('Error al draftear al jugador');
         }
@@ -72,6 +76,28 @@ export default {
       console.log('Selección confirmada:', this.selectedPlayer);
       // Resetear la selección después de la confirmación
       this.selectedPlayer = null;
+    },
+    async loadPlayersDraft() {
+      try {
+        // Hacer la solicitud GET para obtener los jugadores desde playersDraft
+        const response = await axios.get('http://localhost:3001/api/1.0/playersDraft');
+        if (response.status === 200) {
+          this.playersDraft = response.data;  // Actualizar la lista de jugadores desde playersDraft
+        } else {
+          console.error('Error al obtener jugadores desde playersDraft');
+        }
+      } catch (error) {
+        console.error('Error al obtener jugadores desde playersDraft:', error);
+      }
+    },
+    selectByPosition() {
+      // Método para seleccionar el jugador por posición
+      const position = parseInt(this.selectedPosition);
+      if (!isNaN(position) && position > 0 && position <= this.playersDraft.length) {
+        this.selectedPlayer = this.playersDraft[position - 1]; // Arrays son base 0
+      } else {
+        console.error('Posición inválida');
+      }
     }
   }
 };

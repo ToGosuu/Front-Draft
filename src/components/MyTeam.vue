@@ -33,8 +33,8 @@ export default {
     };
   },
   created() {
-    // Obtener el ID del equipo desde los parámetros de la ruta
-    const teamId = this.$route.params.id;
+    // Utilizamos el teamId específico
+    const teamId = "665cff7fda591cb24e7fd18c";
     this.fetchTeamData(teamId);
   },
   methods: {

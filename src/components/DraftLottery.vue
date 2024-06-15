@@ -3,17 +3,19 @@
     <h2>Lotería del DRAFT</h2>
     <transition-group name="fade">
       <ul>
-        <li v-for="(team, index) in draftOrder" :key="index">{{ index + 1 }}. {{ team.name }} - Posición: {{ team.position }}</li>
+        <li v-for="(team, index) in draftOrder" :key="index">
+          {{ index + 1 }}. {{ team.name }} - Posición: {{ team.position }}
+        </li>
       </ul>
     </transition-group>
-    <button @click="goToAssociationDraft" :disabled="draftOrder.length === 0">Ir a Association Draft</button>
-    <button @click="goToMyTeam" :disabled="draftOrder.length === 0">Ir a Mi Equipo</button>
-    <button @click="goToTraspasosComponent" :disabled="draftOrder.length === 0">Ir a Traspasos</button>
+    <button @click="goToAssociationDraft">Ir a Association Draft</button>
+    <button @click="goToMyTeam">Ir a Mi Equipo</button>
+    <button @click="goToTraspasosComponent">Ir a Traspasos</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'; // Importa Axios para realizar solicitudes HTTP
+import axios from 'axios';
 
 export default {
   data() {
@@ -35,19 +37,16 @@ export default {
         });
     },
     goToAssociationDraft() {
-      if (this.draftOrder.length > 0) {
-        this.$router.push({ name: 'AssociationDraft' });
-      }
+      // No es necesario verificar la longitud de draftOrder aquí
+      this.$router.push({ name: 'AssociationDraft' });
     },
     goToMyTeam() {
-      if (this.draftOrder.length > 0) {
-        this.$router.push({ name: 'MyTeam' });
-      }
+      // No es necesario verificar la longitud de draftOrder aquí
+      this.$router.push({ name: 'MyTeam' });
     },
     goToTraspasosComponent() {
-      if (this.draftOrder.length > 0) {
-        this.$router.push({ name: 'TraspasosComponent' });
-      }
+      // No es necesario verificar la longitud de draftOrder aquí
+      this.$router.push({ name: 'TraspasosComponent' });
     }
   }
 };
